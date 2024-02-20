@@ -1,0 +1,78 @@
+version: "3.9"
+services:
+
+  # Database Postgres
+  db:
+    image: postgres:14-alpine3.18
+    restart: always
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=50"
+      - "-c"
+      - "shared_buffers=1GB"
+      - "-c"
+      - "effective_cache_size=4GB"
+      - "-c"
+      - "work_mem=16MB"
+      - "-c"
+      - "maintenance_work_mem=512MB"
+      - "-c"
+      - "random_page_cost=1.1"
+      - "-c"
+      - "temp_file_limit=10GB"
+      - "-c"
+      - "log_min_duration_statement=200ms"
+      - "-c"
+      - "idle_in_transaction_session_timeout=10s"
+      - "-c"
+      - "lock_timeout=1s"
+      - "-c"
+      - "statement_timeout=60s"
+      - "-c"
+      - "shared_preload_libraries=pg_stat_statements"
+      - "-c"
+      - "pg_stat_statements.max=10000"
+      - "-c"
+      - "pg_stat_statements.track=all"
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=currency_converter
+    ports:
+      - ${POSTGRES_PORT:-15432}:5432
+    container_name: currency_converter_postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d currency_converter" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+
+  # FastAPI App
+  web:
+    build:
+      context: .
+      dockerfile: ./docker/dockerfiles/Dockerfile.local
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@localhost/currency_converter
+      API_KEY_RATE: fca_live_UDPFeyiEWr6NMQGI6DTNRpb8ZLCpX8rpbTN7F44a
+      SECRET_KEY: sdf_ds=sdfsdre25Fdf67
+    volumes:
+      - ./:/core
+    ports:
+      - 8001:8001
+    links:
+      - db
+    image: app:curr_converter
+    container_name: currency_converter_web
+    depends_on:
+      db:
+        condition: service_healthy

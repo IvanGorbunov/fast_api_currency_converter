@@ -1,0 +1,19 @@
+Dockerfile
+
+# Ignore .git folder
+.git
+.github
+.gitignore
+.vscode
+.circleci
+.coveragerc
+.gitlab-ci.*
+.vscode
+README
+chart
+
+# Ignore devspace.yaml file to prevent image rebuilding after config changes
+devspace.yaml
+docker-compose.yml
+cicd
+venv
