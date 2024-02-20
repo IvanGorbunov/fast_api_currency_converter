@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "fast-api-currency-converter"
+name = "fast-api-currency-exchanger"
 version = "0.1.0"
-description = "API for currency conversion"
+description = "API for currency exchanger"
 authors = ["IvanGorbunov <falseprogrammerfirst@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
 fastapi = "^0.109.2"
-sqlalchemy = "^2.0.27"
+sqlalchemy = {extras = ["asyncio"], version = "^2.0.27"}
 psycopg2-binary = "^2.9.9"
 python-dotenv = "^1.0.1"
 freecurrencyapi = "^0.1.0"
@@ -21,6 +21,10 @@ pytest = "^8.0.1"
 httpx = "^0.26.0"
 mypy = "^1.8.0"
 pylint = "^3.0.3"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.2.0"
 
 [build-system]
 requires = ["poetry-core"]
