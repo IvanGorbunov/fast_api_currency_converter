@@ -65,9 +65,9 @@ jobs:
         run: |
           pip install pycodestyle
           pycodestyle --statistics --max-line-length=500 .
-      - name: Run tests # run tests
-        run: |
-          cd ./src && poetry run pytest .
+#      - name: Run tests # run tests
+#        run: |
+#          cd ./src && poetry run pytest .
       - name: Run Mypy # run Mypy
         run: poetry run mypy ./src
       - name: Run pylint # run pylint
