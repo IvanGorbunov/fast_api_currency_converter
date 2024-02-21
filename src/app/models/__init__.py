@@ -2,7 +2,7 @@ __all__ = (
     "Base",
     "Currency",
     "CurrencyRate",
-    "DataBaseHelper",
+    "DatabaseHelper",
     "db_helper",
 )
 
