@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-from app.currency.schemas import CurrencyExchangeSchema
-from app.currency.services.external_api import get_current_exchange_rates
+from app.api.v1.currency.schemas import CurrencyExchangeSchema
+from app.api.v1.currency.services.external_api import get_current_exchange_rates
 from app.models import Currency
 
 

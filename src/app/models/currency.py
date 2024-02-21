@@ -18,12 +18,11 @@ class CurrencyRate(Base):
     __tablename__ = "currency_rate"
 
     currency_code_id: Mapped[int] = mapped_column(ForeignKey("currency.id"), index=True)
-    currency_code: Mapped["Currency"] = relationship(back_populates="currency_rates")
+    # currency_code: Mapped["Currency"] = relationship("Currency", back_populates="rates")
 
     rate: Mapped[Optional[float]] = mapped_column(Float(), nullable=True)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
-        # default_factory=lambda: datetime.now(UTC),
         default=datetime.now(UTC),
         onupdate=datetime.now(UTC),
     )

@@ -8,4 +8,4 @@ __all__ = (
 
 from .base import Base
 from .currency import Currency, CurrencyRate
-from .db_helper import DataBaseHelper, db_helper
+from .db_helper import DatabaseHelper, db_helper
