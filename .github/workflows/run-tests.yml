@@ -23,7 +23,7 @@ jobs:
       POSTGRES_DB: currency_converter
       POSTGRES_PORT: 5432
       SECRET_KEY: ${{ vars.SECRET_KEY }}
-      DATABASE_URL: postgresql://postgres:postgres@localhost/currency_converter
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/currency_converter
       API_KEY_RATE: ${{ vars.API_KEY_RATE }}
     services:
       postgres_main:
