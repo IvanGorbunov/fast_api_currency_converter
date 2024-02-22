@@ -64,7 +64,7 @@ jobs:
       - name: Check Syntax # check code formatting
         run: |
           pip install pycodestyle
-          pycodestyle --statistics --max-line-length=500 .
+          pycodestyle --exclude=./src/alembic --statistics --max-line-length=500 .
       - name: Run tests # run tests
         run: |
           cd ./src && poetry run pytest .
