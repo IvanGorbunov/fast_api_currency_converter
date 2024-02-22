@@ -30,11 +30,13 @@ class Settings(BaseSettings):
     API_KEY_RATE: str
 
     HOST: str = "0.0.0.0"
-    PORT: str = "8001"
+    PORT: int = 8001
 
     # Logging settings
     LOGGING_LEVEL: str = "INFO"
     LOG_FILE: str = "app.log"
+
+    SYS_CURRENCY: str = "USD"
 
     model_config = SettingsConfigDict(env_file=env_path)
 

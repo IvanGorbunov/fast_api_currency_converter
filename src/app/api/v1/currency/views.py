@@ -1,58 +1,65 @@
 from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import Session
-from app.config import settings
-from . import crud
+
 from app.models import db_helper
 from .services.currency_helper import CurrencyHelper
-from .schemas import CurrencyExchangeSchema, CurrencyCreate, Currency
-
-# from app.services.database import get_db
+from .schemas import (
+    CurrencyExchangeSchema,
+    DynamicCurrencyResponseSchema,
+    CurrencyExchangeResponseSchema,
+)
 
 router = APIRouter(tags=["Currencies"])
 
 
-@router.get("/", response_model=list[Currency])
-async def get_currencies(session: AsyncSession = Depends(db_helper.session_dependency)):
-    return await crud.get_currencies(session=session)
-
-
-@router.post("/", response_model=Currency)
-async def create_currency(
-    currency_in: CurrencyCreate,
+@router.post("/update_exchange_rates/")
+async def update_exchange_rates(
     session: AsyncSession = Depends(db_helper.session_dependency),
 ):
-    return await crud.create_currency(session=session, currency_in=currency_in)
+    message = await CurrencyHelper.update_exchange_rates(session=session)
+    if not message:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Couldn't get any data.",
+        )
+    return {"message": message}
 
 
-@router.get("/{currency_id}/", response_model=Currency)
-async def get_currency(
-    currency_id: int, session: AsyncSession = Depends(db_helper.session_dependency)
+@router.get("/last_update_dates", response_model=DynamicCurrencyResponseSchema)
+async def last_update_courses(
+    session: AsyncSession = Depends(db_helper.session_dependency),
 ):
-    currency = await crud.get_currency(session=session, currency_id=currency_id)
-    if currency:
-        return currency
-
-    raise HTTPException(
-        status_code=status.HTTP_404_NOT_FOUND,
-        detail=f"Currency {currency_id} not found.",
-    )
-
-
-@router.post("/update_exchange_rates")
-async def update_exchange_rates():
-    await CurrencyHelper.update_exchange_rates()
-    return {"message": "Exchange rates updated successfully"}
+    data = await CurrencyHelper.last_update_dates(session=session)
+    if not data:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Couldn't get any data.",
+        )
+    json_data = {"data": data}
+    return JSONResponse(content={"data": data})
 
 
-@router.get("/last_update_courses")
-async def last_update_courses():
-    await CurrencyHelper.last_update_courses()
-    return {"message": "Exchange rates updated successfully"}
+@router.post("/exchange_currency", response_model=CurrencyExchangeResponseSchema)
+async def exchange_currency(
+    request: CurrencyExchangeSchema,
+    session: AsyncSession = Depends(db_helper.session_dependency),
+):
+    if request.from_currency == request.to_currency:
+        raise HTTPException(status_code=400, detail="Invalid currency codes")
+    if request.amount == 0:
+        raise HTTPException(status_code=400, detail="Invalid amount")
 
+    try:
+        exchanged_amount = await CurrencyHelper.exchange_currency(
+            session=session,
+            from_currency=request.from_currency,
+            to_currency=request.to_currency,
+            amount=request.amount,
+        )
+    except HTTPException as e:
+        raise e
 
-@router.post("/exchange_currency")
-async def exchange_currency(currency_exchange: CurrencyExchangeSchema):
+    response_data = {"currency": request.to_currency, "amount": exchanged_amount}
 
-    await CurrencyHelper.exchange_currency(currency_exchange)
-    return {"message": "Exchange rates successfully"}
+    return CurrencyExchangeResponseSchema(**response_data)

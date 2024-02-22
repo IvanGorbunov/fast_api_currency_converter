@@ -1,49 +1,47 @@
 import logging
 from freecurrencyapi import Client
 from typing import List, Dict
+
 from app.config import settings
 
-logging.basicConfig(filename=settings.LOG_FILE, level=settings.LOGGING_LEVEL, format="%(asctime)s [%(levelname)s]: %(message)s")
-logger = logging.getLogger(__name__)
+logging.basicConfig(
+    filename=settings.LOG_FILE,
+    level=settings.LOGGING_LEVEL,
+    format="%(asctime)s [%(levelname)s]: %(message)s",
+)
+LOG = logging.getLogger(__name__)
 
 
-class ExchangeRatesAPI:
+class ExchangeRatesAPIHelper:
+    client = Client(api_key=settings.API_KEY_RATE)
 
-    # @staticmethod
-    # def get_current_exchange_rates() -> List[Dict[str, float]]:
-    #     client = Client(api_key=API_KEY_RATE)
-    #     try:
-    #         status = client.status()
-    #     except Exception as e:
-    #         logger.error(f"Error getting exchange rates: {e}")
-    #         return []
-    #     if status != 200:
-    #         logger.error(f"Service responded: {status}")
-    #         return []
-    #
-
-    @staticmethod
-    async def update_currency_rates():
-        api_key = settings.API_KEY_RATE
-
+    @classmethod
+    async def get_remaining_quota(cls) -> int:
         try:
-            # Создаем объект API с использованием ключа
-            client = Client(api_key=settings.API_KEY_RATE)
-
-            # Получаем текущие курсы обмена
-            rates = await client.latest()
-
-            # # Обновляем базу данных
-            # async with get_db() as db:
-            #     for currency_code, rate in rates.items():
-            #         await create_currency_rate(db, currency_code=currency_code, rate=rate)
-
-            logger.info("Currency rates updated successfully")
-
+            status = cls.client.status()
+            if settings.DEBUG:
+                LOG.info(f"Third-party service quotas remaining: {status["quotas"]["month"]["remaining"]}")
         except Exception as e:
-            # Логирование ошибок запроса
-            logger.error(f"Error updating currency rates: {e}")
+            LOG.error(f"Error getting third-party service`s status: {e}")
+            return 0
+        return status["quotas"]["month"]["remaining"]
 
+    @classmethod
+    async def get_currencies(cls) -> Dict | None:
+        try:
+            currencies = cls.client.currencies()
+            currencies = currencies.get("data", {})
+        except Exception as e:
+            LOG.error(f"Error getting currencies: {e}")
+            return None
+        return currencies
 
-def get_current_exchange_rates():
-    pass
+    @classmethod
+    async def get_current_exchange_rates(cls) -> Dict | None:
+        try:
+            latest_rate = cls.client.latest()
+            latest_rate = latest_rate.get("data", {})
+        except Exception as e:
+            LOG.error(f"Error getting exchange rates: {e}")
+            return None
+        return latest_rate

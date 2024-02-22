@@ -1,27 +1,29 @@
-from typing import Annotated
+from datetime import datetime
+from typing import Annotated, Dict
 
 from annotated_types import MinLen, MaxLen
-from pydantic import BaseModel, ConfigDict
-
-
-class CurrencyBase(BaseModel):
-    code: Annotated[str, MinLen(3), MaxLen(3)]
-
-
-class CurrencyCreate(CurrencyBase):
-    pass
-
-
-class Currency(CurrencyBase):
-    model_config = ConfigDict(from_attributes=True)
-    id: int
+from pydantic import BaseModel
 
 
 class CurrencyRate(BaseModel):
-    currency_code_id: int
-
+    code: str
+    name: str
     rate: float
-    # updated_at: datetime
+    updated_at: datetime
+
+
+class CurrencyCreateCreate(BaseModel):
+    code: str
+    name: str
+    rate: float
+
+
+class DynamicCurrencyDateSchema(BaseModel):
+    pass
+
+
+class DynamicCurrencyResponseSchema(BaseModel):
+    data: Dict[str, DynamicCurrencyDateSchema]
 
 
 class CurrencyExchangeSchema(BaseModel):
@@ -30,5 +32,6 @@ class CurrencyExchangeSchema(BaseModel):
     amount: float
 
 
-class CurrencySchema(BaseModel):
-    code: Annotated[str, MinLen(3), MaxLen(3)]
+class CurrencyExchangeResponseSchema(BaseModel):
+    currency: str
+    amount: float

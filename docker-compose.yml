@@ -62,7 +62,7 @@ services:
       context: .
       dockerfile: ./docker/dockerfiles/Dockerfile.local
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@localhost/currency_converter
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@db:5432/currency_converter
       API_KEY_RATE: fca_live_UDPFeyiEWr6NMQGI6DTNRpb8ZLCpX8rpbTN7F44a
       SECRET_KEY: sdf_ds=sdfsdre25Fdf67
     volumes:
