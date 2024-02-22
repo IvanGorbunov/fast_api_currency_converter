@@ -67,7 +67,9 @@ jobs:
           pycodestyle --exclude=./src/alembic --statistics --max-line-length=500 .
       - name: Run tests # run tests
         run: |
-          cd ./src && poetry run pytest .
+          cd ./src
+          alembic upgrade head
+          poetry run pytest .
       - name: Run Mypy # run Mypy
         run: poetry run mypy ./src
       - name: Run pylint # run pylint
