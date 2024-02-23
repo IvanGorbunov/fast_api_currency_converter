@@ -84,7 +84,7 @@ jobs:
 #        run: poetry run pylint ./src/
       - name: Run tests # run tests
         run: |
-          poetry add alembic python-dotenv fastapi freecurrencyapi pydantic-settings asyncpg sqlmodel pytest-cov
+          pip install alembic python-dotenv fastapi freecurrencyapi pydantic-settings asyncpg sqlmodel pytest-cov
           cd ./src
           alembic upgrade head
           cd ..
