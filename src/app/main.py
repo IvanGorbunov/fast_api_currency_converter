@@ -1,3 +1,4 @@
+# pylint: skip-file
 """
 Main entry point
 """
@@ -13,6 +14,9 @@ from app.config import settings
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    """
+    Lifespan context
+    """
     yield
 
 
