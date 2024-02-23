@@ -12,10 +12,13 @@ env_path = os.path.join(os.path.dirname(BASE_DIR.absolute()), ".env")
 load_dotenv(env_path)
 
 
-class Settings(BaseSettings):
+class Settings(BaseSettings, frozen=True):
     """
     Settings class for the project
     """
+
+    model_config = SettingsConfigDict(env_file=".env")
+    # model_config = SettingsConfigDict(env_file=env_path)
 
     DEBUG: bool = False
 
@@ -37,8 +40,6 @@ class Settings(BaseSettings):
     LOG_FILE: str = "app.log"
 
     SYS_CURRENCY: str = "USD"
-
-    model_config = SettingsConfigDict(env_file=env_path)
 
 
 settings = Settings()
