@@ -84,9 +84,9 @@ jobs:
 #        run: poetry run pylint ./src/
       - name: Run tests # run tests
         run: |
-          pip install alembic python-dotenv fastapi freecurrencyapi pydantic-settings asyncpg sqlmodel pytest-cov
+          poetry add alembic python-dotenv fastapi freecurrencyapi pydantic-settings asyncpg sqlmodel pytest-cov
           cd ./src
-          alembic upgrade head
+          poetry run alembic upgrade head
           cd ..
           poetry run pytest ./src --cov-report=xml --cov=fast_api_currency_exchanger
       - name: Upload coverage reports to Codecov
