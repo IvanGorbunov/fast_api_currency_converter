@@ -21,7 +21,7 @@ async def update_exchange_rates(
     if not message:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f"Couldn't get any data.",
+            detail="Couldn't get any data.",
         )
     return {"message": message}
 
@@ -34,10 +34,10 @@ async def last_update_courses(
     if not data:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f"Couldn't get any data.",
+            detail="Couldn't get any data.",
         )
     json_data = {"data": data}
-    return JSONResponse(content={"data": data})
+    return JSONResponse(content=json_data)
 
 
 @router.post("/exchange_currency", response_model=CurrencyExchangeResponseSchema)

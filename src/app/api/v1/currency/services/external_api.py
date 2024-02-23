@@ -1,6 +1,6 @@
 import logging
 from freecurrencyapi import Client
-from typing import List, Dict
+from typing import Dict
 
 from app.config import settings
 

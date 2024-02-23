@@ -1,6 +1,6 @@
 import logging
 
-from sqlalchemy import select, func, and_
+from sqlalchemy import select, func
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession
 
