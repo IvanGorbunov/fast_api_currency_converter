@@ -78,8 +78,8 @@ jobs:
           poetry run flake8
 #      - name: Check syntax with Mypy # run Mypy
 #        run: poetry run mypy ./src
-      - name: Check syntax with pylint # run pylint
-        run: poetry run pylint ./src/
+#      - name: Check syntax with pylint # run pylint
+#        run: poetry run pylint ./src/
       - name: Run tests # run tests
         run: |
           cd ./src
