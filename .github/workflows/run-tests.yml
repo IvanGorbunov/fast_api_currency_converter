@@ -16,6 +16,11 @@ on:
 jobs:
   health-check-job: # health check job for testing and code formatting check
     runs-on: ubuntu-latest # os for running the job
+
+    strategy:
+      matrix:
+        python-version: [ 3.12, ]
+
     env:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -25,6 +30,7 @@ jobs:
       SECRET_KEY: ${{ vars.SECRET_KEY }}
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/currency_converter
       API_KEY_RATE: ${{ vars.API_KEY_RATE }}
+
     services:
       postgres_main:
         image: postgres
@@ -39,8 +45,9 @@ jobs:
           --health-interval 10s 
           --health-timeout 5s 
           --health-retries 5
+
     steps:
-      - name: Checkout code # checking our the code at current commit that triggers the workflow
+      - name: Checkout repository # checking our the code at current commit that triggers the workflow
         uses: actions/checkout@v3
       - name: Cache dependency # caching dependency will make our build faster.
         uses: actions/cache@v3 # for more info checkout pip section documentation at https://github.com/actions/cache
@@ -63,14 +70,23 @@ jobs:
         run: poetry install
       - name: Check Syntax # check code formatting
         run: |
-          pip install pycodestyle
-          pycodestyle --exclude=./src/alembic --statistics --max-line-length=500 .
+          poetry add pycodestyle
+          poetry run pycodestyle --exclude=./src/alembic --statistics --max-line-length=500 .
+      - name: Check syntax with flake8
+        run: | 
+          poetry add flake8
+          poetry run flake8
+      - name: Check syntax with Mypy # run Mypy
+        run: poetry run mypy ./src
+      - name: Check syntax with pylint # run pylint
+        run: poetry run pylint ./src/app/
       - name: Run tests # run tests
         run: |
           cd ./src
           alembic upgrade head
-          poetry run pytest .
-      - name: Run Mypy # run Mypy
-        run: poetry run mypy ./src
-      - name: Run pylint # run pylint
-        run: poetry run pylint ./src/app/
+          poetry run pytest . --cov-report=xml --cov=fast_api_currency_exchanger
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: IvanGorbunov/fast_api_currency_exchanger

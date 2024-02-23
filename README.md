@@ -2,9 +2,28 @@
 
 ## Install:
 
-```bash
-docker compose up -d --build
-```
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/IvanGorbunov/fast_api_currency_exchanger.git
+   cd fast_api_currency_exchanger
+   ```
+
+1. Set up environment variables:
+
+   ```bash
+   cp .env.example .env
+   ```
+   Fill in the .env file with the necessary values.
+
+1. Run the project:
+
+   ```bash
+   docker-compose -f docker-compose.yml up --build -d
+   ```
+   NOTE: Migrations will be applied automatically when the `Dockerfile.local` is executed.
+
+   The project will be available at http://localhost:8001.
 
 ## URL`s:
 
@@ -13,9 +32,9 @@ docker compose up -d --build
 - http://127.0.0.1:8001/api/v1/currencies/last_update_dates/ - Get the latest update dates.
 - http://127.0.0.1:8001/api/v1/currencies/exchange_currency/ - Exchange currency
 
-## Example requests:
+## API Usage:
 
-1. Update exchange rates:
+1. Update currency exchange rates:
 
     ```curl
     curl -X 'POST' \
@@ -24,7 +43,7 @@ docker compose up -d --build
       -d ''
     ```
 
-2. Get the latest update dates:
+2. Get the latest update dates of currency exchange rates:
 
     ```curl
     curl -X 'GET' \
@@ -32,7 +51,7 @@ docker compose up -d --build
       -H 'accept: application/json'
     ```
    
-3. Exchange currency:
+3. Currency exchange:
 
     ```curl
     curl -X 'POST' \
