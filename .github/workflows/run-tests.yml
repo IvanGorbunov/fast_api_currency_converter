@@ -82,9 +82,8 @@ jobs:
 #        run: poetry run pylint ./src/
       - name: Run tests # run tests
         run: |
-          
           cd ./src
-          pip install alembic
+          pip install alembic python-dotenv
           alembic upgrade head
           poetry run pytest . --cov-report=xml --cov=fast_api_currency_exchanger
       - name: Upload coverage reports to Codecov
