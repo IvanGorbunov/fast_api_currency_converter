@@ -107,6 +107,12 @@ jobs:
         run: python --version
       - name: Upgrade Pip # check and upgrade Pip
         run: python -m pip install --upgrade pip
+      - name: Install Poetry # install Poetry
+        run: |
+          pip install poetry
+          poetry self update
+      - name: Install dependencies # install application dependencies
+        run: poetry install
       - name: Run tests # run tests
         run: |
           poetry add alembic python-dotenv fastapi freecurrencyapi pydantic-settings asyncpg sqlmodel pytest-cov
