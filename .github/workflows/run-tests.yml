@@ -112,10 +112,11 @@ jobs:
           pip install poetry
           poetry self update
       - name: Install dependencies # install application dependencies
-        run: poetry install
+        run: | 
+          poetry install
+          poetry add alembic python-dotenv fastapi freecurrencyapi pydantic-settings asyncpg sqlmodel pytest-cov
       - name: Run tests # run tests
         run: |
-          poetry add alembic python-dotenv fastapi freecurrencyapi pydantic-settings asyncpg sqlmodel pytest-cov
           cd ./src
           poetry run alembic upgrade head
           cd ..
