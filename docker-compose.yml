@@ -71,6 +71,8 @@ services:
       - 8001:8001
     links:
       - db
+    command: >
+      sh -c "./docker/wait-for-it.sh db:5432 -- sh ./docker/backend/entrypoint-web.sh"
     image: app:curr_converter
     container_name: currency_converter_web
     depends_on:
