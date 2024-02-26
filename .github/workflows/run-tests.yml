@@ -14,7 +14,8 @@ on:
 
 # three job definition
 jobs:
-  health-check-job: # health check job for testing and code formatting check
+  # Health check job for testing and code formatting check
+  health-check-job:
     runs-on: ubuntu-latest # os for running the job
 
     strategy:
@@ -47,15 +48,8 @@ jobs:
           --health-retries 5
 
     steps:
-      - name: Checkout repository # checking our the code at current commit that triggers the workflow
+      - name: Checkout repository # checking out the code at current commit that triggers the workflow
         uses: actions/checkout@v3
-#      - name: Cache dependency # caching dependency will make our build faster.
-#        uses: actions/cache@v3 # for more info checkout pip section documentation at https://github.com/actions/cache
-#        with:
-#          path: ~/.cache/pip
-#          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-#          restore-keys: |
-#            ${{ runner.os }}-pip-
       - name: Setup python environment # setting python environment to 3.x
         uses: actions/setup-python@v3
         with:
@@ -70,7 +64,7 @@ jobs:
           poetry self update
       - name: Install dependencies # install application dependencies
         run: poetry install
-      - name: Check Syntax # check code formatting
+      - name: Check Syntax with pycodestyle
         run: |
           poetry add pycodestyle
           poetry run pycodestyle --exclude=./src/alembic --statistics --max-line-length=500 .
@@ -78,19 +72,55 @@ jobs:
         run: | 
           poetry add flake8
           poetry run flake8
-#      - name: Check syntax with Mypy # run Mypy
-#        run: poetry run mypy ./src
-#      - name: Check syntax with pylint # run pylint
-#        run: poetry run pylint ./src/
+
+  # Test job for running unit tests
+  test-job:
+    runs-on: ubuntu-latest # os for running the job
+
+    strategy:
+      matrix:
+        python-version: [ 3.12, ]  # Same strategy as health-check-job
+
+    env:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: localhost # default host value for the database
+      POSTGRES_DB: currency_converter
+      POSTGRES_PORT: 5432
+      SECRET_KEY: ${{ vars.SECRET_KEY }}
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/currency_converter
+      API_KEY_RATE: ${{ vars.SECRET_KEY }}  # Mistake in original file fixed here
+
+    services:
+      postgres_main:
+        image: postgres
+        # Same service definition as health-check-job
+
+    steps:
+      - name: Checkout repository # checking out the code at current commit that triggers the workflow
+        uses: actions/checkout@v3
+      - name: Setup python environment # setting python environment to 3.x
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.12'
+      - name: Check Python version # checking the python version to see if 3.x is installed.
+        run: python --version
+      - name: Upgrade Pip # check and upgrade Pip
+        run: python -m pip install --upgrade
       - name: Run tests # run tests
         run: |
           poetry add alembic python-dotenv fastapi freecurrencyapi pydantic-settings asyncpg sqlmodel pytest-cov
           cd ./src
           poetry run alembic upgrade head
           cd ..
-          poetry run pytest ./src --cov-report=xml --cov=fast_api_currency_exchanger
+          poetry run pytest ./src --cov=app --cov-report=xml --junitxml=junit/test-results.xml
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: IvanGorbunov/fast_api_currency_exchanger
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: junit/test-results.xml

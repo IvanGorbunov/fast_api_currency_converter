@@ -63,3 +63,4 @@ cython_debug/
 # database
 data/
 *.log
+.coverage

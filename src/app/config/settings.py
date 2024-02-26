@@ -18,7 +18,6 @@ class Settings(BaseSettings, frozen=True):
     """
 
     model_config = SettingsConfigDict(env_file=".env")
-    # model_config = SettingsConfigDict(env_file=env_path)
 
     DEBUG: bool = False
 
