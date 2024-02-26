@@ -74,16 +74,19 @@ jobs:
         run: | 
           poetry add flake8
           poetry run flake8
-      - name: Run tests # run tests
+      - name: Create .env
         run: |
           touch ./.env
           echo DEBUG=True >> ./.env
           echo SECRET_KEY=${{ env.SECRET_KEY }} >> ./.env
           echo DATABASE_URL=${{ env.DATABASE_URL }} >> ./.env
           echo API_KEY_RATE=${{ env.API_KEY_RATE }} >> ./.env
+      - name: Apply migrations
+        run: |
           cd ./src
           poetry run alembic upgrade head
-          cd ..
+      - name: Run tests # run tests
+        run: |
           poetry run pytest ./src --cov=app --cov-report=xml --junitxml=junit/test-results.xml
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
