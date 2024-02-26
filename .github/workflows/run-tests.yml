@@ -28,9 +28,9 @@ jobs:
       POSTGRES_HOST: localhost # default host value for the database
       POSTGRES_DB: currency_converter
       POSTGRES_PORT: 5432
-      SECRET_KEY: ${{ vars.SECRET_KEY }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/currency_converter
-      API_KEY_RATE: ${{ vars.API_KEY_RATE }}
+      API_KEY_RATE: ${{ secrets.API_KEY_RATE }}
 
     services:
       postgres_main:
