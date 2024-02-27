@@ -44,10 +44,10 @@ async_session_maker = sessionmaker(engine_test, class_=AsyncSession, expire_on_c
 #     loop.close()
 
 
-client = TestClient(app)
+# client = TestClient(app)
 
 
-@pytest.fixture(scope="session")
-async def ac() -> AsyncGenerator[AsyncClient, None]:
-    async with AsyncClient(app=app, base_url="http://test") as ac:
-        yield ac
+# @pytest.fixture(scope="session")
+# async def ac() -> AsyncGenerator[AsyncClient, None]:
+#     async with AsyncClient(app=app, base_url="http://testserver") as ac:
+#         yield ac
