@@ -7,7 +7,6 @@ from app.api.v1.currency.services.currency_helper import CurrencyHelper
 from app.config import settings
 
 
-
 @pytest.mark.asyncio
 @patch.object(CurrencyHelper, "update_exchange_rates")
 async def test_update_exchange_rates_success(
