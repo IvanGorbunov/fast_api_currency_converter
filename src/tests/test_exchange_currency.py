@@ -42,8 +42,20 @@
 #         rates = result.scalars().all()
 #         assert
 #         assert result.all() == [
-#             (currency_usd["id"], currency_usd["code"], currency_usd["name"], currency_usd["rate"], currency_usd["updated_at"]),
-#             (currency_eur["id"], currency_eur["code"], currency_eur["name"], currency_eur["rate"], currency_eur["updated_at"]),
+#             (
+#             currency_usd["id"],
+#             currency_usd["code"],
+#             currency_usd["name"],
+#             currency_usd["rate"],
+#             currency_usd["updated_at"]
+#             ),
+#             (
+#             currency_eur["id"],
+#             currency_eur["code"],
+#             currency_eur["name"],
+#             currency_eur["rate"],
+#             currency_eur["updated_at"]
+#             ),
 #         ]
 #
 #
