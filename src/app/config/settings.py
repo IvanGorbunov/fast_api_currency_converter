@@ -18,16 +18,14 @@ class Settings(BaseSettings, frozen=True):
     """
 
     model_config = SettingsConfigDict(env_file=".env")
-    # model_config = SettingsConfigDict(env_file=env_path)
 
     DEBUG: bool = False
 
     PROJECT_NAME: str = "fast-api-currency-exchanger"
     API_V1_STR: str = "/api/v1"
 
-    DATABASE_URL: str = (
-        "postgresql+asyncpg://postgres:postgres@db:5432/currency_converter"
-    )
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@db:5432/currency_converter"
+    DATABASE_URL_TEST: str = "postgresql+asyncpg://postgres:postgres@db:5432/currency_converter_test"
 
     SECRET_KEY: str
     API_KEY_RATE: str

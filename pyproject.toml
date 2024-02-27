@@ -23,6 +23,7 @@ httpx = "^0.26.0"
 mypy = "^1.8.0"
 pylint = "^3.0.3"
 pytest-cov = "^4.1.0"
+pytest-asyncio = "^0.23.5"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -31,3 +32,9 @@ black = "^24.2.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = [
+  ".", "src",
+]
+asyncio_mode="auto"

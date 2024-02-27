@@ -1,3 +1,5 @@
+![Tests](https://github.com/IvanGorbunov/fast_api_currency_exchanger/actions/workflows/tests.yaml/badge.svg)
+
 # API for currency conversion
 
 ## Install:

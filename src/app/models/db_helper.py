@@ -1,5 +1,6 @@
 from asyncio import current_task
 
+from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     create_async_engine,
@@ -11,7 +12,10 @@ from app.config import settings
 
 
 class DatabaseHelper:
+    metadata = MetaData()
+
     def __init__(self, url: str, echo: bool = False):
+        # self.metadata = MetaData()
         self.engine = create_async_engine(
             url=url,
             echo=echo,

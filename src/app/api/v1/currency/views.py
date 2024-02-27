@@ -1,7 +1,10 @@
+import logging
+
 from fastapi import APIRouter, HTTPException, status, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.config import settings
 from app.models import db_helper
 from .services.currency_helper import CurrencyHelper
 from .schemas import (
@@ -9,6 +12,15 @@ from .schemas import (
     DynamicCurrencyResponseSchema,
     CurrencyExchangeResponseSchema,
 )
+
+
+logging.basicConfig(
+    filename=settings.LOG_FILE,
+    level=settings.LOGGING_LEVEL,
+    format="%(asctime)s [%(levelname)s]: %(message)s",
+)
+LOG = logging.getLogger(__name__)
+
 
 router = APIRouter(tags=["Currencies"])
 
@@ -61,5 +73,4 @@ async def exchange_currency(
         raise e
 
     response_data = {"currency": request.to_currency, "amount": exchanged_amount}
-
-    return CurrencyExchangeResponseSchema(**response_data)
+    return JSONResponse(content=response_data)
