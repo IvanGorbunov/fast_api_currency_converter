@@ -5,7 +5,7 @@ from sqlalchemy import Float, DateTime, Column, Integer, Table
 from sqlalchemy import String
 from sqlalchemy.orm import mapped_column, Mapped
 
-from . import db_helper
+from .db_helper import db_helper
 from .base import Base
 
 
