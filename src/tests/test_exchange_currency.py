@@ -12,7 +12,7 @@ from app.api.v1.currency.schemas import CurrencyExchangeSchema
 # from app.main import app
 from app.config import settings
 from app.models.currency import currency_rate
-from .conftest import async_session_maker
+# from .conftest import async_session_maker
 
 
 #
@@ -23,7 +23,7 @@ from .conftest import async_session_maker
 #         yield client
 
 
-async def test_add_role():
+async def test_add_rates(async_session_maker):
     async with async_session_maker() as session:
         stmt = insert(currency_rate).values(id=1, code="USD", rate=1)
         await session.execute(stmt)
@@ -42,12 +42,12 @@ async def test_add_role():
 # @patch.object(CurrencyHelper, "exchange_currency")
 async def test_exchange_currency_success(
     # mock_exchange_currency,
-    client: httpx.AsyncClient,
+    ac: httpx.AsyncClient,
 ):
     # mock_exchange_currency.return_value = 92.46
     request = CurrencyExchangeSchema(from_currency="USD", to_currency="EUR", amount=100)
 
-    response = await client.post(
+    response = await ac.post(
         settings.API_V1_STR + "/currencies/exchange_currency/", json=request.dict()
     )
     assert response.status_code == 200
