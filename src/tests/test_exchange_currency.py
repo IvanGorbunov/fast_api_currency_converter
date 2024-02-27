@@ -1,15 +1,15 @@
 
-from unittest.mock import patch
+# from unittest.mock import patch
 
 import httpx
 import pytest
-import pytest_asyncio
-from typing import AsyncIterator
+# import pytest_asyncio
+# from typing import AsyncIterator
 from sqlalchemy import insert, select
 
 from app.api.v1.currency.schemas import CurrencyExchangeSchema
-from app.api.v1.currency.services.currency_helper import CurrencyHelper
-from app.main import app
+# from app.api.v1.currency.services.currency_helper import CurrencyHelper
+# from app.main import app
 from app.config import settings
 from app.models.currency import currency_rate
 from .conftest import async_session_maker

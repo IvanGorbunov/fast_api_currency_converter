@@ -24,6 +24,7 @@ currency_rate = Table(
     ),
 )
 
+
 class CurrencyRate(Base):
     code: Mapped[str] = mapped_column(String(3), index=True)
     name: Mapped[str] = mapped_column(String(30))
