@@ -2,11 +2,11 @@ from unittest.mock import patch
 
 import httpx
 import pytest
-import pytest_asyncio
-from typing import AsyncIterator
+# import pytest_asyncio
+# from typing import AsyncIterator
 
 from app.api.v1.currency.services.currency_helper import CurrencyHelper
-from app.main import app
+# from app.main import app
 from app.config import settings
 
 
