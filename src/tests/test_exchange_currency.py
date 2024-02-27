@@ -12,7 +12,7 @@ from app.api.v1.currency.schemas import CurrencyExchangeSchema
 # from app.main import app
 from app.config import settings
 from app.models.currency import currency_rate
-# from .conftest import async_session_maker
+from .conftest import async_session_maker
 
 
 #
@@ -23,7 +23,7 @@ from app.models.currency import currency_rate
 #         yield client
 
 
-async def test_add_rates(async_session_maker):
+async def test_add_rates():
     async with async_session_maker() as session:
         stmt = insert(currency_rate).values(id=1, code="USD", rate=1)
         await session.execute(stmt)
