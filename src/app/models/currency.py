@@ -10,7 +10,7 @@ from .base import Base
 
 
 currency_rate = Table(
-    "role",
+    "currencyrates",
     db_helper.metadata,
     Column("id", Integer, primary_key=True),
     Column('code', String(3), index=True),
