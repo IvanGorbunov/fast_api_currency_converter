@@ -27,7 +27,6 @@ async def test_update_exchange_rates_success(
     response = await client.post(
         settings.API_V1_STR + "/currencies/update_exchange_rates/", json={}
     )
-
     assert response.status_code == 200
     assert response.json() == {"message": "Exchange rates updated successfully"}
 
@@ -43,6 +42,5 @@ async def test_update_exchange_rates_error(
     response = await client.post(
         settings.API_V1_STR + "/currencies/update_exchange_rates/", json={}
     )
-
     assert response.status_code == 503
     assert response.json() == {"detail": "Couldn't get any data."}

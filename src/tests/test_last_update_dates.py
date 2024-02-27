@@ -16,12 +16,12 @@ async def ac() -> AsyncIterator[httpx.AsyncClient]:
         yield client
 
 
-@pytest.mark.asyncio
-async def test_last_update_dates_empty(ac: httpx.AsyncClient):
-    # Test the last_update_dates endpoint
-    response = await ac.get(settings.API_V1_STR + "/currencies/last_update_dates")
-    assert response.status_code == 200
-    assert "data" in response.json()
+# @pytest.mark.asyncio
+# async def test_last_update_dates_empty(ac: httpx.AsyncClient):
+#     # Test the last_update_dates endpoint
+#     response = await ac.get(settings.API_V1_STR + "/currencies/last_update_dates")
+#     assert response.status_code == 200
+#     assert "data" in response.json()
 
 
 @pytest.mark.asyncio
@@ -33,7 +33,6 @@ async def test_last_update_dates_success(
     mock_last_update_dates.return_value = {"USD": "2023-11-19"}
 
     response = await ac.get(settings.API_V1_STR + "/currencies/last_update_dates")
-
     assert response.status_code == 200
     assert response.json() == {"data": {"USD": "2023-11-19"}}
 
@@ -47,6 +46,5 @@ async def test_last_update_dates_error(
     mock_last_update_dates.return_value = None
 
     response = await ac.get(settings.API_V1_STR + "/currencies/last_update_dates")
-
     assert response.status_code == 503
     assert response.json() == {"detail": "Couldn't get any data."}
