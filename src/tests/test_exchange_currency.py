@@ -1,15 +1,20 @@
 
-# from unittest.mock import patch
-#
-# import httpx
-# import pytest
-# import pytest_asyncio
-# from typing import AsyncIterator
-#
-# from app.api.v1.currency.schemas import CurrencyExchangeSchema
-# from app.api.v1.currency.services.currency_helper import CurrencyHelper
-# from app.main import app
-# from app.config import settings
+from unittest.mock import patch
+
+import httpx
+import pytest
+import pytest_asyncio
+from typing import AsyncIterator
+from sqlalchemy import insert, select
+
+from app.api.v1.currency.schemas import CurrencyExchangeSchema
+from app.api.v1.currency.services.currency_helper import CurrencyHelper
+from app.main import app
+from app.config import settings
+from app.models.currency import currency_rate
+from .conftest import async_session_maker
+
+
 #
 #
 # @pytest_asyncio.fixture
@@ -18,20 +23,35 @@
 #         yield client
 
 
-# @pytest.mark.asyncio
+async def test_add_role():
+    async with async_session_maker() as session:
+        stmt = insert(currency_rate).values(id=1, code="USD", rate=1)
+        await session.execute(stmt)
+        await session.commit()
+
+        stmt = insert(currency_rate).values(id=2, code="EUR", rate=0.9246)
+        await session.execute(stmt)
+        await session.commit()
+
+        query = select(currency_rate)
+        result = await session.execute(query)
+        assert result.all() == [(1, 'USD', 1), (2, 'EUR', 0.9246)]
+
+
+@pytest.mark.asyncio
 # @patch.object(CurrencyHelper, "exchange_currency")
-# async def test_exchange_currency_success(
-#     mock_exchange_currency,
-#     client: httpx.AsyncClient,
-# ):
-#     mock_exchange_currency.return_value = 92.46
-#     request = CurrencyExchangeSchema(from_currency="USD", to_currency="EUR", amount=100)
-#
-#     response = await client.post(
-#         settings.API_V1_STR + "/currencies/exchange_currency/", json=request.dict()
-#     )
-#     assert response.status_code == 200
-#     assert response.json() == {"currency": "EUR", "amount": 92.46}
+async def test_exchange_currency_success(
+    # mock_exchange_currency,
+    client: httpx.AsyncClient,
+):
+    # mock_exchange_currency.return_value = 92.46
+    request = CurrencyExchangeSchema(from_currency="USD", to_currency="EUR", amount=100)
+
+    response = await client.post(
+        settings.API_V1_STR + "/currencies/exchange_currency/", json=request.dict()
+    )
+    assert response.status_code == 200
+    assert response.json() == {"currency": "EUR", "amount": 92.46}
 
 
 # @pytest.mark.asyncio

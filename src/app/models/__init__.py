@@ -1,6 +1,5 @@
 __all__ = (
     "Base",
-    # "Currency",
     "CurrencyRate",
     "DatabaseHelper",
     "db_helper",

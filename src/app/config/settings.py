@@ -24,9 +24,8 @@ class Settings(BaseSettings, frozen=True):
     PROJECT_NAME: str = "fast-api-currency-exchanger"
     API_V1_STR: str = "/api/v1"
 
-    DATABASE_URL: str = (
-        "postgresql+asyncpg://postgres:postgres@db:5432/currency_converter"
-    )
+    DATABASE_URL: str = "postgresql+asyncpg://postgres:postgres@db:5432/currency_converter"
+    DATABASE_URL_TEST: str = "postgresql+asyncpg://postgres:postgres@db:5432/currency_converter_test"
 
     SECRET_KEY: str
     API_KEY_RATE: str
