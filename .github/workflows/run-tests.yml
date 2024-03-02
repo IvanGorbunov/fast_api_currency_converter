@@ -24,7 +24,7 @@ jobs:
 
     env:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
       POSTGRES_HOST: localhost # default host value for the database
       POSTGRES_DB: currency_converter
       POSTGRES_PORT: 5432
