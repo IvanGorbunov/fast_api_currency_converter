@@ -11,6 +11,10 @@
    cd fast_api_currency_exchanger
    ```
 
+1. Create an account on **FreecurrencyAPI** if it does not exist.
+
+   Create an account on https://app.freecurrencyapi.com/dashboard if it does not exist
+
 1. Set up environment variables:
 
    ```bash
