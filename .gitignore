@@ -64,3 +64,4 @@ cython_debug/
 data/
 *.log
 .coverage
+coverage.xml

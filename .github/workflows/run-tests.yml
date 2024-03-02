@@ -97,13 +97,17 @@ jobs:
 
       - name: Run tests # run tests
         run: |
-          poetry run pytest -v ./src --cov=app --cov-report=xml --junitxml=junit/test-results.xml
+          poetry run pytest -v ./src --cov=./src/app --cov-report=xml
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
+        uses: codecov/codecov-action@v4-beta
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: IvanGorbunov/fast_api_currency_exchanger
+          flags: smart-tests
+          verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Upload test results
         uses: actions/upload-artifact@v4
