@@ -104,8 +104,8 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: IvanGorbunov/fast_api_currency_exchanger
-          flags: smart-tests
-          verbose: true
+#          flags: smart-tests
+#          verbose: true
 #        env:
 #          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
